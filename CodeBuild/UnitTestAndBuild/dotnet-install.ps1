@@ -211,19 +211,19 @@ function Get-CLIArchitecture-From-Architecture([string]$Architecture) {
 
     switch ($Architecture.ToLowerInvariant()) {
         { ($_ -eq "amd64") -or ($_ -eq "x64") } {
-            return "x64" 
+            return "x64"
         }
         { $_ -eq "x86" } {
-            return "x86" 
+            return "x86"
         }
         { $_ -eq "arm" } {
-            return "arm" 
+            return "arm"
         }
         { $_ -eq "arm64" } {
-            return "arm64" 
+            return "arm64"
         }
         default {
-            throw "Architecture '$Architecture' not supported. If you think this is a bug, report it at https://github.com/dotnet/install-scripts/issues" 
+            throw "Architecture '$Architecture' not supported. If you think this is a bug, report it at https://github.com/dotnet/install-scripts/issues"
         }
     }
 }
@@ -256,14 +256,14 @@ function Get-NormalizedQuality([string]$Quality) {
 
     switch ($Quality) {
         { @("daily", "signed", "validated", "preview") -contains $_ } {
-            return $Quality.ToLowerInvariant() 
+            return $Quality.ToLowerInvariant()
         }
         #ga quality is available without specifying quality, so normalizing it to empty
         { $_ -eq "ga" } {
-            return "" 
+            return ""
         }
         default {
-            throw "'$Quality' is not a supported value for -Quality option. Supported values are: daily, signed, validated, preview, ga. If you think this is a bug, report it at https://github.com/dotnet/install-scripts/issues." 
+            throw "'$Quality' is not a supported value for -Quality option. Supported values are: daily, signed, validated, preview, ga. If you think this is a bug, report it at https://github.com/dotnet/install-scripts/issues."
         }
     }
 }
@@ -281,13 +281,13 @@ function Get-NormalizedChannel([string]$Channel) {
 
     switch ($Channel) {
         { $_ -eq "lts" } {
-            return "LTS" 
+            return "LTS"
         }
         { $_ -eq "current" } {
-            return "current" 
+            return "current"
         }
         default {
-            return $Channel.ToLowerInvariant() 
+            return $Channel.ToLowerInvariant()
         }
     }
 }
@@ -297,19 +297,19 @@ function Get-NormalizedProduct([string]$Runtime) {
 
     switch ($Runtime) {
         { $_ -eq "dotnet" } {
-            return "dotnet-runtime" 
+            return "dotnet-runtime"
         }
         { $_ -eq "aspnetcore" } {
-            return "aspnetcore-runtime" 
+            return "aspnetcore-runtime"
         }
         { $_ -eq "windowsdesktop" } {
-            return "windowsdesktop-runtime" 
+            return "windowsdesktop-runtime"
         }
         { [string]::IsNullOrEmpty($_) } {
-            return "dotnet-sdk" 
+            return "dotnet-sdk"
         }
         default {
-            throw "'$Runtime' is not a supported value for -Runtime option, supported values are: dotnet, aspnetcore, windowsdesktop. If you think this is a bug, report it at https://github.com/dotnet/install-scripts/issues." 
+            throw "'$Runtime' is not a supported value for -Runtime option, supported values are: dotnet, aspnetcore, windowsdesktop. If you think this is a bug, report it at https://github.com/dotnet/install-scripts/issues."
         }
     }
 }
@@ -328,7 +328,7 @@ function Get-Version-From-LatestVersion-File-Content([string]$VersionText) {
 
     $VersionInfo = @{
         CommitHash = $(if ($Data.Count -gt 1) {
-                $Data[0] 
+                $Data[0]
             })
         Version    = $Data[-1] # last line is always the version number.
     }
@@ -499,16 +499,16 @@ function Get-Version-From-LatestVersion-File([string]$AzureFeed, [string]$Channe
 
     switch ($Response.Content.Headers.ContentType) {
         { ($_ -eq "application/octet-stream") } {
-            $VersionText = $StringContent 
+            $VersionText = $StringContent
         }
         { ($_ -eq "text/plain") } {
-            $VersionText = $StringContent 
+            $VersionText = $StringContent
         }
         { ($_ -eq "text/plain; charset=UTF-8") } {
-            $VersionText = $StringContent 
+            $VersionText = $StringContent
         }
         default {
-            throw "``$Response.Content.Headers.ContentType`` is an unknown .version file content type." 
+            throw "``$Response.Content.Headers.ContentType`` is an unknown .version file content type."
         }
     }
 
@@ -627,8 +627,9 @@ function Get-Product-Version([string]$AzureFeed, [string]$SpecificVersion, [stri
     Say-Invocation $MyInvocation
 
     # Try to get the version number, using the productVersion.txt file located next to the installer file.
-    $ProductVersionTxtURLs = (Get-Product-Version-Url $AzureFeed $SpecificVersion $PackageDownloadLink -Flattened $true),
-                             (Get-Product-Version-Url $AzureFeed $SpecificVersion $PackageDownloadLink -Flattened $false)
+    $ProductVersionTxtURLs =
+    (Get-Product-Version-Url $AzureFeed $SpecificVersion $PackageDownloadLink -Flattened $true),
+    (Get-Product-Version-Url $AzureFeed $SpecificVersion $PackageDownloadLink -Flattened $false)
 
     Foreach ($ProductVersionTxtURL in $ProductVersionTxtURLs) {
         Say-Verbose "Checking for the existence of $ProductVersionTxtURL"
