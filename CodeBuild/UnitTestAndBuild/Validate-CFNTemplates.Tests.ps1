@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 Describe 'CloudFormation Template Validation' {
 
     Context -Name 'CloudFormation Templates' {
-        Context -Name '<_.Name>' -Foreach $files {
+        Context -Name '<_.Name>' -ForEach $files {
             It 'is valid CFN' {
                 { Test-CFNTemplate -TemplateBody (Get-Content -Path $_.FullName -Raw) } | Should -Not -Throw
             } #it

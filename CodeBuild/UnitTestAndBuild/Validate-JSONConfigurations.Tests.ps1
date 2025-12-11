@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 Describe -Name 'JSON Configuration File Validation' {
 
     Context -Name 'JSON Parameter Files' {
-        Context -Name '<_.Name>' -Foreach $files {
+        Context -Name '<_.Name>' -ForEach $files {
             It 'is valid JSON' {
                 { $null = ConvertFrom-Json -InputObject (Get-Content -Path $_.FullName -Raw) } | Should -Not -Throw
             } #it

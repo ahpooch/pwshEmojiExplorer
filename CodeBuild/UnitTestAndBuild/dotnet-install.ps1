@@ -520,7 +520,7 @@ function Get-Version-From-LatestVersion-File([string]$AzureFeed, [string]$Channe
 function Parse-Jsonfile-For-Version([string]$JSonFile) {
     Say-Invocation $MyInvocation
 
-    If (-Not (Test-Path $JSonFile)) {
+    if (-not (Test-Path $JSonFile)) {
         throw "Unable to find '$JSonFile'"
     }
     try {
@@ -548,7 +548,7 @@ function Parse-Jsonfile-For-Version([string]$JSonFile) {
     else {
         throw "Unable to find the SDK node in '$JSonFile'"
     }
-    If ($Version -eq $null) {
+    if ($Version -eq $null) {
         throw "Unable to find the SDK:version node in '$JSonFile'"
     }
     return $Version
@@ -631,7 +631,7 @@ function Get-Product-Version([string]$AzureFeed, [string]$SpecificVersion, [stri
     (Get-Product-Version-Url $AzureFeed $SpecificVersion $PackageDownloadLink -Flattened $true),
     (Get-Product-Version-Url $AzureFeed $SpecificVersion $PackageDownloadLink -Flattened $false)
 
-    Foreach ($ProductVersionTxtURL in $ProductVersionTxtURLs) {
+    foreach ($ProductVersionTxtURL in $ProductVersionTxtURLs) {
         Say-Verbose "Checking for the existence of $ProductVersionTxtURL"
 
         try {
@@ -784,7 +784,7 @@ function Get-List-Of-Directories-And-Versions-To-Unpack-From-Dotnet-Package([Sys
         $dir = Get-Path-Prefix-With-Version $entry.FullName
         if ($null -ne $dir) {
             $path = Get-Absolute-Path $(Join-Path -Path $OutPath -ChildPath $dir)
-            if (-Not (Test-Path $path -PathType Container)) {
+            if (-not (Test-Path $path -PathType Container)) {
                 $ret += $dir
             }
         }
@@ -823,11 +823,11 @@ function Extract-Dotnet-Package([string]$ZipPath, [string]$OutPath) {
 
         foreach ($entry in $Zip.Entries) {
             $PathWithVersion = Get-Path-Prefix-With-Version $entry.FullName
-            if (($null -eq $PathWithVersion) -Or ($DirectoriesToUnpack -contains $PathWithVersion)) {
+            if (($null -eq $PathWithVersion) -or ($DirectoriesToUnpack -contains $PathWithVersion)) {
                 $DestinationPath = Get-Absolute-Path $(Join-Path -Path $OutPath -ChildPath $entry.FullName)
                 $DestinationDir = Split-Path -Parent $DestinationPath
-                $OverrideFiles = $OverrideNonVersionedFiles -Or (-Not (Test-Path $DestinationPath))
-                if ((-Not $DestinationPath.EndsWith("\")) -And $OverrideFiles) {
+                $OverrideFiles = $OverrideNonVersionedFiles -or (-not (Test-Path $DestinationPath))
+                if ((-not $DestinationPath.EndsWith("\")) -and $OverrideFiles) {
                     New-Item -ItemType Directory -Force -Path $DestinationDir | Out-Null
                     [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $DestinationPath, $OverrideNonVersionedFiles)
                 }
@@ -887,9 +887,9 @@ function SafeRemoveFile($Path) {
 
 function Prepend-Sdk-InstallRoot-To-Path([string]$InstallRoot) {
     $BinPath = Get-Absolute-Path $(Join-Path -Path $InstallRoot -ChildPath "")
-    if (-Not $NoPath) {
+    if (-not $NoPath) {
         $SuffixedBinPath = "$BinPath;"
-        if (-Not $env:path.Contains($SuffixedBinPath)) {
+        if (-not $env:path.Contains($SuffixedBinPath)) {
             Say "Adding to current process PATH: `"$BinPath`". Note: This change will not be visible if PowerShell was run as a child process."
             $env:path = $SuffixedBinPath + $env:path
         }
@@ -1138,7 +1138,7 @@ if ([string]::IsNullOrEmpty($JSonFile) -and ($Version -eq "latest")) {
         $DownloadLinks += New-Object PSObject -Property @{downloadLink = "$DownloadLink"; specificVersion = "$SpecificVersion"; effectiveVersion = "$EffectiveVersion"; type = 'aka.ms' }
         Say-Verbose "Generated aka.ms link $DownloadLink with version $EffectiveVersion"
 
-        if (-Not $DryRun) {
+        if (-not $DryRun) {
             Say-Verbose "Checking if the version $EffectiveVersion is already installed"
             if (Is-Dotnet-Package-Installed -InstallRoot $InstallRoot -RelativePathToPackage $dotnetPackageRelativePath -SpecificVersion $EffectiveVersion) {
                 Say "$assetName with version '$EffectiveVersion' is already installed."
@@ -1166,7 +1166,7 @@ if ([string]::IsNullOrEmpty($NormalizedQuality) -and 0 -eq $DownloadLinks.count)
                 Say-Verbose "Generated legacy link $LegacyDownloadLink with version $EffectiveVersion"
             }
 
-            if (-Not $DryRun) {
+            if (-not $DryRun) {
                 Say-Verbose "Checking if the version $EffectiveVersion is already installed"
                 if (Is-Dotnet-Package-Installed -InstallRoot $InstallRoot -RelativePathToPackage $dotnetPackageRelativePath -SpecificVersion $EffectiveVersion) {
                     Say "$assetName with version '$EffectiveVersion' is already installed."
@@ -1247,7 +1247,7 @@ Extract-Dotnet-Package -ZipPath $ZipPath -OutPath $InstallRoot
 $isAssetInstalled = $false
 
 # if the version contains "RTM" or "servicing"; check if a 'release-type' SDK version is installed.
-if ($DownloadedLink.effectiveVersion -Match "rtm" -or $DownloadedLink.effectiveVersion -Match "servicing") {
+if ($DownloadedLink.effectiveVersion -match "rtm" -or $DownloadedLink.effectiveVersion -match "servicing") {
     $ReleaseVersion = $DownloadedLink.effectiveVersion.Split("-")[0]
     Say-Verbose "Checking installation: version = $ReleaseVersion"
     $isAssetInstalled = Is-Dotnet-Package-Installed -InstallRoot $InstallRoot -RelativePathToPackage $dotnetPackageRelativePath -SpecificVersion $ReleaseVersion
