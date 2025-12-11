@@ -19,8 +19,7 @@ Describe 'Module Tests' -Tag Unit {
             $? | Should -BeTrue
         } #psm1Exists
         It 'manifest should contain pwshEmojiExplorer.psm1' {
-            $PathToManifest |
-            Should -FileContentMatchExactly "pwshEmojiExplorer.psm1"
+            $PathToManifest | Should -FileContentMatchExactly "pwshEmojiExplorer.psm1"
         } #validPSM1
         It 'should have a matching module name in the manifest' {
             $script:manifestEval.Name | Should -BeExactly $ModuleName

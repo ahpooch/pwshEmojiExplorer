@@ -3947,7 +3947,7 @@ InModuleScope 'pwshEmojiExplorer' {
             It 'should return all emoji' {
                 # https://github.com/pester/Pester/issues/1315
                 $emojis = Get-AllEmoji
-            ($emojis[0]).GetType().Name | Should -Be 'PSEmoji'
+                ($emojis[0]).GetType().Name | Should -Be 'PSEmoji'
                 $emojis.Count | Should -BeGreaterThan 3000
             } #it
 
@@ -3960,7 +3960,7 @@ InModuleScope 'pwshEmojiExplorer' {
                 It 'should return the expected object type' {
                     # https://github.com/pester/Pester/issues/1315
                     $emoji = Get-Emoji -Emoji '😀'
-                ($emoji).GetType().Name | Should -Be 'PSEmoji'
+                    ($emoji).GetType().Name | Should -Be 'PSEmoji'
                 } #it
 
                 It 'should return the expected results for Emoji' {
