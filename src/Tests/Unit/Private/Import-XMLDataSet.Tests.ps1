@@ -658,9 +658,6 @@ InModuleScope 'pwshEmojiExplorer' {
             Mock -CommandName Get-Content -MockWith {
                 $xmlData
             } #endMock
-            Mock -CommandName ConvertFrom-Clixml -MockWith {
-                $objData
-            } #endMock
         } #before_each
 
         Context 'Error' {

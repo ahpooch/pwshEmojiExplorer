@@ -31,8 +31,17 @@ function Import-XMLDataSet {
                     Raw         = $true
                     ErrorAction = 'Stop'
                 }
-                $fileData = Get-Content @getContentSplat
-                $script:glData = $fileData | ConvertFrom-Clixml -ErrorAction Stop
+                $fileData = Get-Content @getContentSplat | ForEach-Object {
+                    try {
+                        foreach ($record in ($_ -split '(?<!^)(?=<Objs)')) {
+                            [System.Management.Automation.PSSerializer]::Deserialize($record)
+                        }
+                    }
+                    catch {
+                        Write-Error -ErrorRecord $_ -ErrorAction Stop
+                    }
+                }
+                $script:glData = $fileData
             } #try
             catch {
                 $result = $false
